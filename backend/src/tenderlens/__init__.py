@@ -1,4 +1,9 @@
 def validate_tender(tender: dict) -> list[str]:
+
+    if not isinstance(tender, dict):
+        return ["Invalid input: tender must be a dictionary"]
+
+
     required_fields = ["title", "reference_number", "deadline"]
     errors = []
 
