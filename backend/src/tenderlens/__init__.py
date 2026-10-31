@@ -1,8 +1,9 @@
-def validate_tender(tender: dict) -> list[str]:
+from datetime import date
 
+
+def validate_tender(tender: object) -> list[str]:
     if not isinstance(tender, dict):
         return ["Invalid input: tender must be a dictionary"]
-
 
     required_fields = ["title", "reference_number", "deadline"]
     errors = []
@@ -10,13 +11,25 @@ def validate_tender(tender: dict) -> list[str]:
     for field in required_fields:
         if field not in tender:
             errors.append(f"Missing field: {field}")
+
         elif not isinstance(tender[field], str) or not tender[field].strip():
             errors.append(f"Invalid or empty field: {field}")
+
+        elif field == "deadline":
+            try:
+                parsed_date = date.fromisoformat(tender[field])
+
+                # Ensure the date follows the exact YYYY-MM-DD format.
+                if parsed_date.isoformat() != tender[field]:
+                    errors.append("Invalid deadline format")
+
+            except ValueError:
+                errors.append("Invalid deadline format")
 
     return errors
 
 
-def display_tender(tender: dict) -> None:
+def display_tender(tender: object) -> None:
     errors = validate_tender(tender)
 
     if errors:
